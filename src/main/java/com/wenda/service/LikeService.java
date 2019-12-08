@@ -1,4 +1,4 @@
-package com.wenda.controller;
+package com.wenda.service;
 
 import com.wenda.service.RedisService;
 import com.wenda.utils.RedisKeyUtil;

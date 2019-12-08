@@ -2,6 +2,7 @@ package com.wenda.controller;
 
 import com.wenda.model.EntityType;
 import com.wenda.model.HostHolder;
+import com.wenda.service.LikeService;
 import com.wenda.utils.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,6 +2,7 @@ package com.wenda.controller;
 
 import com.wenda.model.*;
 import com.wenda.service.CommentService;
+import com.wenda.service.LikeService;
 import com.wenda.service.QuestionService;
 import com.wenda.service.UserService;
 import com.wenda.utils.WendaUtil;
