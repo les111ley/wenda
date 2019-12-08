@@ -35,6 +35,9 @@ public class QuestionController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    LikeService likeService;
+
     private static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
 
     @RequestMapping(value="/question/add",method = RequestMethod.POST)
@@ -73,6 +76,13 @@ public class QuestionController {
             ViewObject vo = new ViewObject();
             vo.set("comment",comment);
             vo.set("user",userService.getUser(comment.getUserId()));
+            if(hostHolder.getUser() == null){
+                vo.set("liked",0);
+            }else{
+                vo.set("liked",likeService.getLikeStatus(hostHolder.getUser().getId(),EntityType.ENTITY_COMMENT,comment.getId()));
+            }
+            vo.set("likeCount",likeService.getLikeCount(EntityType.ENTITY_COMMENT,comment.getId()));
+
             comments.add(vo);
         }
         model.addAttribute("comments", comments);
