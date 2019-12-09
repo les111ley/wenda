@@ -46,7 +46,7 @@ public class LikeController {
         }
         long likeCount = likeService.dislike(hostHolder.getUser().getId(),EntityType.ENTITY_COMMENT,commentId);
         return WendaUtil.getJSONString(0,String.valueOf(likeCount));
-    }
+}
 
 
 

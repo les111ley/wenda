@@ -77,11 +77,13 @@ public class QuestionController {
             ViewObject vo = new ViewObject();
             vo.set("comment",comment);
             vo.set("user",userService.getUser(comment.getUserId()));
+            //是否对该问题下某条评论点过赞/踩
             if(hostHolder.getUser() == null){
                 vo.set("liked",0);
             }else{
                 vo.set("liked",likeService.getLikeStatus(hostHolder.getUser().getId(),EntityType.ENTITY_COMMENT,comment.getId()));
             }
+            //对某条评论的点赞总数
             vo.set("likeCount",likeService.getLikeCount(EntityType.ENTITY_COMMENT,comment.getId()));
 
             comments.add(vo);
