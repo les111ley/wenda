@@ -15,8 +15,6 @@ public class WendaUtil {
 
     //匿名用户ID
     public static int ANONYMOUS_USERID = 3;
-    //管理员ID
-    public static int SYSTEM_USERID = 4;
 
     public static String MD5(String key) {
         char hexDigits[] = {

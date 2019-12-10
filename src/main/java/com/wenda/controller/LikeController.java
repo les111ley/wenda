@@ -1,12 +1,7 @@
 package com.wenda.controller;
 
-import com.wenda.async.EventModel;
-import com.wenda.async.EventProducer;
-import com.wenda.async.EventType;
-import com.wenda.model.Comment;
 import com.wenda.model.EntityType;
 import com.wenda.model.HostHolder;
-import com.wenda.service.CommentService;
 import com.wenda.service.LikeService;
 import com.wenda.utils.WendaUtil;
 import org.slf4j.Logger;
@@ -32,12 +27,6 @@ public class LikeController {
     @Autowired
     HostHolder hostHolder;
 
-    @Autowired
-    EventProducer eventProducer;
-
-    @Autowired
-    CommentService commentService;
-
 
     @RequestMapping(value = "/like",method = RequestMethod.POST)
     @ResponseBody
@@ -45,15 +34,6 @@ public class LikeController {
         if(hostHolder.getUser() == null){
             return WendaUtil.getJSONString(999);
         }
-        Comment comment = commentService.getCommentById(commentId);
-
-        //给entityOwner发送被点赞的消息，异步实现
-        eventProducer.fireEvent(new EventModel(EventType.LIKE)
-                .setActorId(hostHolder.getUser().getId()).setEntityId(commentId)
-                .setEntityType(EntityType.ENTITY_COMMENT)
-                .setEntityOwnerId(comment.getUserId())
-                .setExts("questionId",String.valueOf(comment.getEntityId())));
-
         long likeCount = likeService.like(hostHolder.getUser().getId(),EntityType.ENTITY_COMMENT,commentId);
         return WendaUtil.getJSONString(0,String.valueOf(likeCount));
     }

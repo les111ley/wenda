@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import java.util.List;
-
 /**
  * Create by xrh
  * 3:34 PM on 12/8/19 2019
@@ -32,7 +30,7 @@ public class RedisDao implements InitializingBean {
             jedis = pool.getResource();
             return jedis.sadd(key,value);
         }catch(Exception e){
-            logger.error("set添加元素异常" + e.getMessage());
+            logger.error("添加元素异常" + e.getMessage());
         }finally{
             if(jedis != null){
                 jedis.close();
@@ -48,7 +46,7 @@ public class RedisDao implements InitializingBean {
             jedis = pool.getResource();
             return jedis.srem(key, value);
         } catch (Exception e) {
-            logger.error("set移除元素异常" + e.getMessage());
+            logger.error("移除元素异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -64,7 +62,7 @@ public class RedisDao implements InitializingBean {
             jedis = pool.getResource();
             return jedis.scard(key);
         } catch (Exception e) {
-            logger.error("set统计元素个数异常" + e.getMessage());
+            logger.error("统计元素个数异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -80,7 +78,7 @@ public class RedisDao implements InitializingBean {
             jedis = pool.getResource();
             return jedis.sismember(key,value);
         } catch (Exception e) {
-            logger.error("set判断元素是否存在异常" + e.getMessage());
+            logger.error("判断元素是否存在异常" + e.getMessage());
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -88,38 +86,4 @@ public class RedisDao implements InitializingBean {
         }
         return false;
     }
-
-    //将元素插入到列表list头部
-    public long lpush(String key, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            return jedis.lpush(key, value);
-        } catch (Exception e) {
-            logger.error("list添加元素异常" + e.getMessage());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-        return 0;
-    }
-
-    //移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止
-    public List<String> brpop(int timeout, String key) {
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            return jedis.brpop(timeout, key);
-        } catch (Exception e) {
-            logger.error("list移除元素异常" + e.getMessage());
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-        return null;
-    }
-
-
 }
