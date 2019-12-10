@@ -21,6 +21,10 @@ public class CommentService {
     @Autowired
     SensitiveService sensitiveService;
 
+    public Comment getCommentById(int Id){
+        return commentDao.getCommentById(Id);
+    }
+
     public List<Comment> getCommentByEntity(int entityId, int entityType){
         return commentDao.selectCommentByEntity(entityId,entityType);
     }
