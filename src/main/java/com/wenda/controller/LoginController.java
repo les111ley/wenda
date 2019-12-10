@@ -1,5 +1,8 @@
 package com.wenda.controller;
 
+import com.wenda.async.EventModel;
+import com.wenda.async.EventProducer;
+import com.wenda.async.EventType;
 import com.wenda.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,9 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    EventProducer eventProducer;
+
 
     @RequestMapping(path = {"/reg"},method = RequestMethod.POST)
     public String reg(Model model,
@@ -35,9 +41,9 @@ public class LoginController {
                       HttpServletResponse response){
 
         try {
-            Map<String, String> map = userService.register(username, password);
+            Map<String, Object> map = userService.register(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket",map.get("ticket"));
+                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
                 cookie.setPath("/");
                 response.addCookie(cookie);
                 //若请求中带有next的跳转要求，则在登录后跳转到next要求的界面
@@ -73,11 +79,23 @@ public class LoginController {
                         HttpServletResponse response){
 
         try {
-            Map<String, String> map = userService.login(username, password);
+            Map<String, Object> map = userService.login(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket",map.get("ticket"));
+                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
                 cookie.setPath("/");
+
+                //若用户点击"记住我"，则设置cookie过期时间为5天
+                if(rememberme){
+                    cookie.setMaxAge(3600*24*5);
+                }
                 response.addCookie(cookie);
+
+                //登陆异常，发送邮件给用户，此处假设用户邮箱为xrh@163.com
+                eventProducer.fireEvent(new EventModel(EventType.LOGIN)
+                        .setExts("username", username)
+                        .setExts("email", "xrh@163.com")
+                        .setActorId((int)map.get("userId")));
+
                 //若请求中带有next的跳转要求，则在登录后跳转到next要求的界面
                 if(!StringUtils.isEmpty(next)){
                     return "redirect:" + next;
