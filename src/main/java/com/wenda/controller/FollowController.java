@@ -209,7 +209,7 @@ public class FollowController {
             }
             ViewObject vo = new ViewObject();
             vo.set("user", user);
-            //vo.set("commentCount", commentService.getUserCommentCount(uid));
+            vo.set("commentCount", commentService.getUserCommentCount(uid));
             vo.set("followerCount", followService.getFollowerCount(EntityType.ENTITY_USER, uid));
             vo.set("followeeCount", followService.getFolloweeCount(uid, EntityType.ENTITY_USER));
             if (localUserId != 0) {

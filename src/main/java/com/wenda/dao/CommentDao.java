@@ -33,6 +33,9 @@ public interface CommentDao {
     @Select({"select",SELECT_FIELDS, "from", TABLE_NAME, "where id=#{Id}"})
    Comment getCommentById(int Id);
 
+    @Select({"select count(id) from ", TABLE_NAME, " where user_id=#{userId}"})
+    int getUserCommentCount(int userId);
+
     @Update({"update comment set status={status}"})
     int updateStauts(@Param("id") int id,
                       @Param("status") int status);
