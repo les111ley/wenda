@@ -128,6 +128,22 @@ public class RedisDao implements InitializingBean {
         return null;
     }
 
+    //获取列表中某一范围内的元素
+    public List<String> lrange(String key, int start, int end) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lrange(key,start,end);
+        } catch (Exception e) {
+            logger.error("list获取元素列表异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
     //开启事务
     public Transaction multi(Jedis jedis){
         try{
