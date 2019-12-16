@@ -15,7 +15,8 @@ public enum EventType {
     LOGIN(2),
     MESSAGE(3),
     FOLLOW(4),
-    UNFOLLOW(5);
+    UNFOLLOW(5),
+    ADD_QUESTION(6);
 
     private int value;
     EventType(int value) { this.value = value; }

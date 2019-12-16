@@ -1,5 +1,8 @@
 package com.wenda.controller;
 
+import com.wenda.async.EventModel;
+import com.wenda.async.EventProducer;
+import com.wenda.async.EventType;
 import com.wenda.model.*;
 import com.wenda.service.CommentService;
 import com.wenda.service.LikeService;
@@ -39,6 +42,9 @@ public class QuestionController {
     @Autowired
     LikeService likeService;
 
+    @Autowired
+    EventProducer eventProducer;
+
     private static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
 
     @RequestMapping(value="/question/add",method = RequestMethod.POST)
@@ -57,6 +63,11 @@ public class QuestionController {
                 question.setUserId(hostHolder.getUser().getId());
             }
             if(questionService.addQuestion(question) > 0){
+                eventProducer.fireEvent(new EventModel(EventType.ADD_QUESTION)
+                        .setActorId(question.getUserId())
+                        .setEntityId(question.getId())
+                        .setExts("title", question.getTitle())
+                        .setExts("content", question.getContent()));
                 return WendaUtil.getJSONString(0);
             }
         }catch(Exception e){
